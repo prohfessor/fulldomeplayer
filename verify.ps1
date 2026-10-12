@@ -10,12 +10,11 @@ $webRoot = "E:\www\player"
 & node --check (Join-Path $webRoot "libs\FullDomeRenderer.js")
 if ($LASTEXITCODE -ne 0) { throw "Renderer syntax check failed" }
 & node --check (Join-Path $webRoot "libs\FullDomeRendererPlayer.js")
-if ($LASTEXITCODE -ne 0) { throw "Compatibility renderer syntax check failed" }
+if ($LASTEXITCODE -ne 0) { throw "Web player bootstrap syntax check failed" }
 
-$canonical = (Get-FileHash (Join-Path $webRoot "libs\FullDomeRenderer.js")).Hash
-$compatibility = (Get-FileHash (Join-Path $webRoot "libs\FullDomeRendererPlayer.js")).Hash
-if ($canonical -ne $compatibility) {
-    throw "Renderer copies differ; update FullDomeRendererPlayer.js from FullDomeRenderer.js"
-}
+& node --check (Join-Path $webRoot "libs\common.js")
+if ($LASTEXITCODE -ne 0) { throw "Common browser utilities syntax check failed" }
+& node --check (Join-Path $webRoot "scenes\cubes.js")
+if ($LASTEXITCODE -ne 0) { throw "Scene syntax check failed" }
 
 Write-Output "Verification: OK"

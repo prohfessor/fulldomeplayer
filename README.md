@@ -1,127 +1,131 @@
-# Planetarium Player
+# Плеер планетария
 
-Плеер с плейлистами для показа 360° и fulldome-видео на куполе планетария.
+Плеер с редактором плейлистов для показа fulldome- и 360°-видео на куполе планетария.
 
-The application consists of two cooperating parts:
+Система состоит из двух независимых проектов:
 
-- `C:\opt\player` — Java Swing control UI and embedded JCEF/Chromium;
-- [`fulldome-web-player`](https://github.com/prohfessor/fulldome-web-player), installed at `E:\www\player` — Three.js fulldome/360 web renderer served by nginx.
+- `C:\opt\player` — Java/Swing-интерфейс оператора и встроенный JCEF/Chromium;
+- [`fulldome-web-player`](https://github.com/prohfessor/fulldome-web-player), установленный в `E:\www\player`, — Three.js renderer, который nginx отдаёт в Chromium.
 
-## Build and run
+## Возможности
 
-Requirements:
+- воспроизведение отдельных видео и плейлистов;
+- режимы интерфейса «Редактор», «Плеер» и «Диджей»;
+- редактирование начала, конца, поворота, наклона и флагов проекции;
+- переключение fulldome/360°;
+- интерактивные видеопревью с кэшем FFmpeg;
+- комментарии и длительность видео внутри строк плейлиста;
+- Drag & Drop файлов, строк и карточек превью;
+- тёмная тема для работы в планетарии;
+- автоматическое размещение JCEF-окна на экране купола.
 
-- Windows and Java 19 or newer;
-- JCEF Java archives in `bin`;
-- the matching native JCEF/Chromium runtime in `bin/lib/win64`;
-- `ffmpeg` and `ffprobe` available through `PATH` or configured in
-  `player.properties`;
-- the web renderer served locally at the URL from `player.url`.
+## Требования
 
-The native JCEF runtime is intentionally not stored in Git: Chromium contains
-large platform-specific binaries, including files above GitHub's 100 MB limit.
-Copy a compatible runtime into `bin/lib/win64` before launching the player.
+- Windows и Java 19 или новее;
+- Java-архивы JCEF в каталоге `bin`;
+- совместимый нативный JCEF/Chromium runtime в `bin/lib/win64`;
+- `ffmpeg` и `ffprobe` в `PATH` либо их пути в `player.properties`;
+- запущенный nginx с web-player по адресу из `player.url`.
 
-Run commands from any working directory:
+Нативный JCEF runtime намеренно не хранится в Git: Chromium содержит большие платформенные бинарные файлы, в том числе файлы крупнее ограничения GitHub в 100 МБ. Перед запуском скопируйте совместимый runtime в `bin/lib/win64`.
+
+## Сборка и запуск
+
+Команды можно выполнять из любого рабочего каталога:
 
 ```bat
 C:\opt\player\cdnd.bat
 C:\opt\player\player.bat
 ```
 
-To open a specific playlist:
+Запуск конкретного плейлиста:
 
 ```bat
 C:\opt\player\player.bat test.js
 ```
 
-An absolute HTTP(S) URL may be passed instead of a playlist name.
+Вместо имени плейлиста можно передать абсолютный HTTP(S)-адрес.
 
-## Configuration
+## Настройка
 
-Runtime settings are in `player.properties`:
+Параметры находятся в `player.properties`:
 
-- `media.root` — nginx document/media root;
-- `playlist.root` — folder displayed by the playlist browser;
-- `player.url` — default renderer URL;
-- `chromium.remoteDebuggingPort` — Chromium debugging port;
-- `dome.screenIndex` — explicit dome display index, or `-1` for automatic selection;
-- `dome.minimumWidth` — minimum width used for automatic dome display selection.
+- `media.root` — корень медиатеки и document root nginx;
+- `playlist.root` — каталог, отображаемый в дереве плейлистов;
+- `player.url` — стартовый URL web-player;
+- `chromium.remoteDebuggingPort` — порт удалённой отладки Chromium;
+- `dome.screenIndex` — номер экрана купола, `-1` включает автоматический выбор;
+- `dome.minimumWidth` — минимальная ширина экрана для автоматического выбора;
+- `ffmpeg.path` и `ffprobe.path` — имена или абсолютные пути утилит.
 
-Use `-Dplayer.config=C:\path\custom.properties` to load another file.
+Другой файл настроек можно указать так:
 
-## Playlist format
-
-UTF-8 text, one video per line:
-
-```text
-begin,end,rotation,pitch,flags,/path/to/video.webm
+```bat
+java -Dplayer.config=C:\path\custom.properties ...
 ```
 
-The legacy five-field form without `flags` remains supported. Blank lines and
-lines beginning with `#` are ignored. An inline `# comment` is also supported.
-Known video duration is stored without changing the playback fields:
+## Формат плейлиста
+
+Плейлист — текстовый файл UTF-8, одна запись на строку:
 
 ```text
-0,0,75.3,60.45,m,/avideo/movie.webm # duration=11.25
+начало,конец,поворот,наклон,флаги,/путь/к/видео.webm
 ```
 
-The second field remains the playback end (`0` means play to the media end).
-The editor obtains missing duration values with `ffprobe` in the background
-when a file is dropped or a playlist is opened for editing.
+Старая форма из пяти полей без флагов также поддерживается. Пустые строки и строки, начинающиеся с `#`, игнорируются. Метаданные хранятся в той же строке:
 
-Flags:
+```text
+0,0,75.3,60.45,f,/video/movie.webm # duration=615.24 # comment=Основная программа
+```
+
+Второе поле задаёт конец фрагмента; `0` означает воспроизведение до конца файла. Если длительность неизвестна, редактор определяет её через `ffprobe` в фоне.
+
+Флаги:
 
 - `f` — fulldome;
 - `o` — 360°;
-- `m` — muted;
-- `s` — start immediately;
-- `p` — pause marker;
-- `h<number>` — vertical offset;
-- `n<number>` — near/far offset.
+- `m` — без звука;
+- `s` — запускать сразу;
+- `p` — маркер паузы;
+- `h<number>` — вертикальное смещение;
+- `n<number>` — приближение/удаление.
 
-## Browser protocol
+## Протокол браузера
 
-Browser to Java uses JCEF queries:
+Web-player отправляет Java-команды через JCEF:
 
 ```text
 cmd:onload;
-cmd:videoinfo;<duration>
-cmd:currenttime;<seconds>
+cmd:videoinfo;<длительность>
+cmd:currenttime;<секунды>
 cmd:videoend;
-cmd:error;<message>
+cmd:error;<сообщение>
 ```
 
-Java to browser calls the public renderer functions (`videoNext`, `play`,
-`pause`, `stop`, seeking and projection controls). Arguments are JavaScript
-escaped before being sent.
+Java вызывает глобальные функции renderer-а: `videoNext`, `play`, `pause`, `stop`, перемотку и функции настройки проекции. Строковые аргументы экранируются перед передачей в JavaScript.
 
-## Java source structure
+## Структура исходников
 
-- `PlanetariumPlayer` — application entry point and main Swing composition;
-- `DomeBrowserWindow` — JCEF window placed on the dome display;
-- `BrowserQueryHandler` / `BrowserCommand` — browser-to-Java protocol;
-- `PlaybackControlPanel` — transport controls and time-range editing;
-- `TimeRangeSlider` / `TimeRangeSliderUI` — two-thumb interval component;
-- `PlaylistItem` / `PlaylistCodec` — playlist domain model and persistence;
-- `MediaDurationProbe` — background ffprobe integration;
-- `PreviewStoryboardCache` / `PlaylistPreviewPanel` — cached interactive video previews;
-- `FileDragTree` — drag-capable file browser;
-- `DarkSwingTheme` — high-contrast dark operator interface;
-- `PlayerConfig` — runtime configuration.
+- `PlanetariumPlayer` — точка входа и компоновка Swing-интерфейса;
+- `DomeBrowserWindow` — окно JCEF на экране купола;
+- `BrowserQueryHandler` / `BrowserCommand` — протокол browser → Java;
+- `PlaybackControlPanel` — управление воспроизведением и временным диапазоном;
+- `TimeRangeSlider` / `TimeRangeSliderUI` — шкала начала, конца и текущего времени;
+- `PlaylistItem` / `PlaylistCodec` — модель и сохранение плейлиста;
+- `MediaDurationProbe` — получение длительности через ffprobe;
+- `PreviewStoryboardCache` / `PlaylistPreviewPanel` — интерактивные превью;
+- `FileDragTree` — дерево файлов с Drag & Drop;
+- `DarkSwingTheme` — тёмная тема интерфейса;
+- `PlayerConfig` — загрузка настроек.
 
-## Verification
+## Проверка
 
-```bat
-C:\opt\player\cdnd.bat
-java -cp C:\opt\player\bin\class dnd.PlaylistCodecTest
-node --check E:\www\player\libs\FullDomeRenderer.js
+```powershell
+C:\opt\player\verify.ps1
 ```
 
-Or run all checks with `C:\opt\player\verify.ps1`.
+Скрипт компилирует Java, запускает тест кодека плейлистов и проверяет синтаксис ключевых JavaScript-файлов web-player.
 
-`FullDomeRenderer.js` is the canonical renderer. The legacy
-`FullDomeRendererPlayer.js` filename is kept as an identical compatibility
-copy; `verify.ps1` prevents the two files from silently diverging.
+## Лицензия
 
-`debug.log` is rotated to `debug.previous.log` after it grows beyond 10 MB.
+Проект распространяется по лицензии BSD 3-Clause. Сторонние библиотеки сохраняют собственные лицензии.
