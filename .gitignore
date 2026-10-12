@@ -1,0 +1,11 @@
+bin/class/
+bin/lib/
+cache/
+debug.log
+debug.previous.log
+Web Data
+Web Data-journal
+*.class
+*.tmp
+.idea/
+.vscode/
