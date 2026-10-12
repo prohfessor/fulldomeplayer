@@ -5,7 +5,7 @@
 The application consists of two cooperating parts:
 
 - `C:\opt\player` — Java Swing control UI and embedded JCEF/Chromium;
-- `E:\www\player` — Three.js fulldome/360 web renderer served by nginx.
+- [`fulldome-web-player`](https://github.com/prohfessor/fulldome-web-player), installed at `E:\www\player` — Three.js fulldome/360 web renderer served by nginx.
 
 ## Build and run
 
