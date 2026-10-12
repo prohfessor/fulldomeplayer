@@ -1,5 +1,7 @@
 # Planetarium Player
 
+Плеер с плейлистами для показа 360° и fulldome-видео на куполе планетария.
+
 The application consists of two cooperating parts:
 
 - `C:\opt\player` — Java Swing control UI and embedded JCEF/Chromium;
