@@ -1,0 +1,19 @@
+{
+  "name": "JCEF 108.4.13 / Chromium 108.0.5359.125",
+  "architecture": "windows-x64",
+  "requiredFiles": [
+    "bin/jcef.jar",
+    "bin/lib/win64/jcef.dll",
+    "bin/lib/win64/jcef_helper.exe",
+    "bin/lib/win64/libcef.dll",
+    "bin/lib/win64/chrome_elf.dll",
+    "bin/lib/win64/icudtl.dat",
+    "bin/lib/win64/resources.pak",
+    "bin/lib/win64/chrome_100_percent.pak",
+    "bin/lib/win64/chrome_200_percent.pak",
+    "bin/lib/win64/snapshot_blob.bin",
+    "bin/lib/win64/v8_context_snapshot.bin",
+    "bin/lib/win64/locales/en-US.pak",
+    "bin/lib/win64/locales/ru.pak"
+  ]
+}
