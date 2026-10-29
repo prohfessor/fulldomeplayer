@@ -4,8 +4,8 @@
 
 Система состоит из двух независимых проектов:
 
-- `C:\opt\player` — Java/Swing-интерфейс оператора и встроенный JCEF/Chromium;
-- [`fulldome-web-player`](https://github.com/prohfessor/fulldome-web-player), установленный в `E:\www\player`, — Three.js renderer, который nginx отдаёт в Chromium.
+- `fulldomeplayer` — Java/Swing-интерфейс оператора и встроенный JCEF/Chromium;
+- [`fulldome-web-player`](https://github.com/prohfessor/fulldome-web-player) — Three.js renderer, который nginx отдаёт в Chromium.
 
 ## Возможности
 
