@@ -161,7 +161,8 @@ final class PlaylistPreviewPanel extends JScrollPane {
 
                 @Override public void mouseDragged(MouseEvent event) {
                     if (dragStarted || dragOrigin == null
-                            || !SwingUtilities.isLeftMouseButton(event)) return;
+                            || (event.getModifiersEx()
+                                & MouseEvent.BUTTON1_DOWN_MASK) == 0) return;
                     if (dragOrigin.distance(event.getPoint()) < 6) return;
                     dragStarted = true;
                     animation.stop();
@@ -210,11 +211,14 @@ final class PlaylistPreviewPanel extends JScrollPane {
             try {
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                boolean dark = DarkSwingTheme.isDark();
                 g.setColor(sourceTable.getSelectedRow() == row
-                    ? new Color(0, 38, 70) : Color.BLACK);
+                    ? (dark ? new Color(0, 38, 70) : new Color(210, 232, 250))
+                    : (dark ? Color.BLACK : new Color(245, 245, 245)));
                 g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
                 g.setColor(sourceTable.getSelectedRow() == row
-                    ? new Color(0, 120, 215) : new Color(175, 175, 175));
+                    ? new Color(0, 120, 215)
+                    : (dark ? new Color(75, 75, 75) : new Color(180, 180, 180)));
                 g.setStroke(new BasicStroke(sourceTable.getSelectedRow() == row ? 2f : 1f));
                 g.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 8, 8);
 
@@ -241,14 +245,14 @@ final class PlaylistPreviewPanel extends JScrollPane {
                 g.fillRect(IMAGE_X, IMAGE_Y + IMAGE_HEIGHT - 3,
                     (int)Math.round(IMAGE_WIDTH * fraction), 3);
 
-                g.setColor(Color.WHITE);
+                g.setColor(dark ? Color.WHITE : Color.BLACK);
                 drawClipped(g, title, IMAGE_X, 151, IMAGE_WIDTH);
                 String time = duration > 0
                     ? format(duration * fraction) + " / " + format(duration)
                     : "";
                 drawClipped(g, time, IMAGE_X, 168, IMAGE_WIDTH);
                 if (!comment.isEmpty()) {
-                    g.setColor(new Color(185, 185, 185));
+                    g.setColor(dark ? new Color(185, 185, 185) : new Color(80, 80, 80));
                     drawClipped(g, comment, IMAGE_X, 185, IMAGE_WIDTH);
                 }
             } finally {

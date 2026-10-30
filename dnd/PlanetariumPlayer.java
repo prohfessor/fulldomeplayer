@@ -974,11 +974,19 @@ checkVideo360.addItemListener(new ItemListener() {
         JToggleButton modeEditor = new JToggleButton("Редактор", true);
         JToggleButton modePlayer = new JToggleButton("Плеер");
         JToggleButton modeDj = new JToggleButton("Диджей");
+        JToggleButton themeButton = new JToggleButton("Тёмная тема", true);
+        themeButton.setToolTipText("Переключить светлую/тёмную тему");
+        themeButton.addActionListener(event -> {
+            boolean dark = themeButton.isSelected();
+            DarkSwingTheme.setDark(dark);
+            themeButton.setText(dark ? "Тёмная тема" : "Светлая тема");
+        });
         ButtonGroup modeGroup = new ButtonGroup();
         modeGroup.add(modeEditor);
         modeGroup.add(modePlayer);
         modeGroup.add(modeDj);
         JPanel modeButtons = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 2, 0));
+        modeButtons.add(themeButton);
         modeButtons.add(modeEditor);
         modeButtons.add(modePlayer);
         modeButtons.add(modeDj);
@@ -1085,8 +1093,8 @@ checkVideo360.addItemListener(new ItemListener() {
     slider = new PlaybackControlPanel(this);
 
 // поворот по горизонтали
-    JPanel contents_rotate360 = new JPanel();
-    contents_rotate360.add(slider_rotate);
+    JPanel contents_rotate360 = new JPanel(new BorderLayout(4, 0));
+    contents_rotate360.add(slider_rotate, BorderLayout.CENTER);
     field_rotate_360 = new JTextField(2);
     field_rotate_360.setToolTipText("Поворот по горизонтали");
     field_rotate_360.addActionListener(new ActionListener() {
@@ -1111,12 +1119,12 @@ checkVideo360.addItemListener(new ItemListener() {
 			}
 		}
 	);
-	contents_rotate360.add(field_rotate_360);
+	contents_rotate360.add(field_rotate_360, BorderLayout.EAST);
 
 
 // тангаж - наклон сферы
-    JPanel contents_rotate_tangage = new JPanel();
-    contents_rotate_tangage.add(slider_rotate_tangage);
+    JPanel contents_rotate_tangage = new JPanel(new BorderLayout(4, 0));
+    contents_rotate_tangage.add(slider_rotate_tangage, BorderLayout.CENTER);
 
     field_rotate_tangage = new JTextField(2);
     field_rotate_tangage.setToolTipText("Тангаж");
@@ -1141,11 +1149,11 @@ checkVideo360.addItemListener(new ItemListener() {
 			}
 		}
 	);
-	contents_rotate_tangage.add(field_rotate_tangage);
+	contents_rotate_tangage.add(field_rotate_tangage, BorderLayout.EAST);
 
 // подъем сферы вверх-вниз
-    JPanel contents_rotate_up = new JPanel();
-    contents_rotate_up.add(slider_rotate_up);
+    JPanel contents_rotate_up = new JPanel(new BorderLayout(4, 0));
+    contents_rotate_up.add(slider_rotate_up, BorderLayout.CENTER);
 
     field_rotate_up = new JTextField(2);
     field_rotate_up.setToolTipText("подъем");
@@ -1167,11 +1175,11 @@ checkVideo360.addItemListener(new ItemListener() {
 			}
 		}
 	);
-	contents_rotate_up.add(field_rotate_up);
+	contents_rotate_up.add(field_rotate_up, BorderLayout.EAST);
 
 // продвижение сферы вперед-назад
-    JPanel contents_rotate_fb = new JPanel();
-    contents_rotate_fb.add(slider_rotate_fb);
+    JPanel contents_rotate_fb = new JPanel(new BorderLayout(4, 0));
+    contents_rotate_fb.add(slider_rotate_fb, BorderLayout.CENTER);
 
     field_rotate_fb = new JTextField(2);
     field_rotate_fb.setToolTipText("вперед-назад");
@@ -1193,7 +1201,7 @@ checkVideo360.addItemListener(new ItemListener() {
 			}
 		}
 	);
-	contents_rotate_fb.add(field_rotate_fb);
+	contents_rotate_fb.add(field_rotate_fb, BorderLayout.EAST);
 
 // размещаем слайдеры друг под другом
         JPanel content_sliders = new JPanel();
@@ -1202,7 +1210,7 @@ checkVideo360.addItemListener(new ItemListener() {
 	GridBagConstraints c_sl = new GridBagConstraints();    
 
 	c_sl.anchor = GridBagConstraints.NORTHWEST; 
-	c_sl.fill   = GridBagConstraints.NONE;  
+	c_sl.fill   = GridBagConstraints.HORIZONTAL;
 	c_sl.ipadx = 32;
 	c_sl.gridheight = 1;
 	c_sl.gridwidth  = GridBagConstraints.REMAINDER; 
