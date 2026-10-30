@@ -79,6 +79,7 @@ C:\opt\player\player.bat test.js
 - `media.root` — корень медиатеки и document root nginx;
 - `playlist.root` — каталог, отображаемый в дереве плейлистов;
 - `player.url` — стартовый URL web-player;
+- `ui.theme` — тема интерфейса: `dark` (по умолчанию) или `light`;
 - `chromium.remoteDebuggingPort` — порт удалённой отладки Chromium;
 - `dome.screenIndex` — номер экрана купола, `-1` включает автоматический выбор;
 - `dome.minimumWidth` — минимальная ширина экрана для автоматического выбора;

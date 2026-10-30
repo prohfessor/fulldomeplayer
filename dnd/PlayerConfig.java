@@ -60,6 +60,12 @@ public final class PlayerConfig {
         return properties.getProperty("ffmpeg.path", "ffmpeg").trim();
     }
 
+    /** Dark is the safe default for a planetarium control room. */
+    public boolean darkTheme() {
+        return !"light".equalsIgnoreCase(
+            properties.getProperty("ui.theme", "dark").trim());
+    }
+
     private Path path(String key, String fallback) {
         return Paths.get(properties.getProperty(key, fallback)).toAbsolutePath().normalize();
     }

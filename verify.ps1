@@ -5,6 +5,8 @@ if ($LASTEXITCODE -ne 0) { throw "Java compilation failed" }
 
 & java -cp (Join-Path $PSScriptRoot "bin\class") dnd.PlaylistCodecTest
 if ($LASTEXITCODE -ne 0) { throw "Java tests failed" }
+& java -cp (Join-Path $PSScriptRoot "bin\class") dnd.DarkSwingThemeTest
+if ($LASTEXITCODE -ne 0) { throw "Swing theme tests failed" }
 
 $webRoot = "E:\www\player"
 & node --check (Join-Path $webRoot "libs\FullDomeRenderer.js")

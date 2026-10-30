@@ -824,7 +824,6 @@ childFrame.browser_.setZoomLevel(-1.18); //!!--
 
 	btnSaveFile.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		JFrame parentFrame = new JFrame();
 		String cur_dir=CONFIG.playlistRoot().toString();
  		if(cur_script_name!=null) cur_dir=cur_script_name.toString();
 		JFileChooser fileChooser = new JFileChooser(cur_dir){ // указать директорию в настройках
@@ -852,7 +851,7 @@ childFrame.browser_.setZoomLevel(-1.18); //!!--
 		fileChooser.setSelectedFile(cur_script_name);
 		fileChooser.setDialogTitle("Выберите файл для записи");   
  
-		int userSelection = fileChooser.showSaveDialog(parentFrame);
+		int userSelection = fileChooser.showSaveDialog(PlanetariumPlayer.this);
  
 if (userSelection == JFileChooser.APPROVE_OPTION) {
     File fileToSave = fileChooser.getSelectedFile();
@@ -974,7 +973,9 @@ checkVideo360.addItemListener(new ItemListener() {
         JToggleButton modeEditor = new JToggleButton("Редактор", true);
         JToggleButton modePlayer = new JToggleButton("Плеер");
         JToggleButton modeDj = new JToggleButton("Диджей");
-        JToggleButton themeButton = new JToggleButton("Тёмная тема", true);
+        boolean darkTheme = DarkSwingTheme.isDark();
+        JToggleButton themeButton = new JToggleButton(
+            darkTheme ? "Тёмная тема" : "Светлая тема", darkTheme);
         themeButton.setToolTipText("Переключить светлую/тёмную тему");
         themeButton.addActionListener(event -> {
             boolean dark = themeButton.isSelected();
@@ -1351,7 +1352,7 @@ Component[] components = viewport.getComponents();
             return;
         }
 Locale.setDefault(Locale.US);
-DarkSwingTheme.install();
+DarkSwingTheme.install(CONFIG.darkTheme());
 
 
 /*
